@@ -42,6 +42,31 @@ void Player::Update()
 		x += 5.0f;
 	}
 
+
+	//UŒ‚‚·‚é‚Æ‚«‚Ìˆ—
+	if (CheckHitKey(KEY_INPUT_SPACE) && !isAttack)
+	{
+		isAttack = true;
+		attackTimer = 10;
+	}
+
+	if (isAttack)
+	{
+		attackBox.left = x + 96;
+		attackBox.top = y + 32;
+		attackBox.right = x + 160;
+		attackBox.bottom = y + 96;
+
+		attackTimer--;
+
+		if (attackTimer <= 0)
+		{
+			isAttack = false;
+		}
+	}
+
+
+	//ˆÚ“®Œã‚ÌÀ•W‚ğ“–‚½‚è”»’è‚Ö
 	box.left = x + 18;
 	box.top = y + 32;
 	box.right = x + 108;
@@ -54,10 +79,32 @@ void Player::Draw()
 
 	//“–‚½‚è”»’è‚Ì‰Â‹‰»
 	DrawBox((int)box.left,(int)box.top,(int)box.right,(int)box.bottom,GetColor(255, 0, 0),FALSE);
+
+	//UŒ‚
+	if (isAttack)
+	{
+		DrawBox(
+			attackBox.left,
+			attackBox.top,
+			attackBox.right,
+			attackBox.bottom,
+			GetColor(255, 255, 0),
+			FALSE);
+	}
 	//DrawRectGraph(x, y, 64, 0, 64, 64, player, 1);
 }
 
 const Box& Player::GetBox() const
 {
 	return box;
+}
+
+const Box& Player::GetAttackBox() const
+{
+	return attackBox;
+}
+
+bool Player::IsAttack() const
+{
+	return isAttack;
 }
