@@ -24,47 +24,55 @@ void Player::Update()
 	//ˆÚ“®ˆ—
 	if (CheckHitKey(KEY_INPUT_W))
 	{
-		y -= 5.0f;
+		y -= P_move;
 	}
 
 	if (CheckHitKey(KEY_INPUT_S))
 	{
-		y += 5.0f;
+		y += P_move;
 	}
 
 	if (CheckHitKey(KEY_INPUT_A))
 	{
-		x -= 5.0f;
+		x -= P_move;
 	}
 
 	if (CheckHitKey(KEY_INPUT_D))
 	{
-		x += 5.0f;
+		x += P_move;
 	}
 
 
 	//UŒ‚‚·‚é‚Æ‚«‚Ìˆ—
-	if (CheckHitKey(KEY_INPUT_SPACE) && !isAttack)
+	if (CheckHitKey(KEY_INPUT_SPACE) && !isAttack && attackCoolTime == 0)
 	{
 		isAttack = true;
-		attackTimer = 10;
+		attackTimer = 100;
 	}
 
-	if (isAttack)
+	if (attackCoolTime == 0)
 	{
-		attackBox.left = x + 96;
-		attackBox.top = y + 32;
-		attackBox.right = x + 160;
-		attackBox.bottom = y + 96;
-
-		attackTimer--;
-
-		if (attackTimer <= 0)
+		if (isAttack)
 		{
-			isAttack = false;
+			attackBox.left = x + 96;
+			attackBox.top = y + 32;
+			attackBox.right = x + 160;
+			attackBox.bottom = y + 96;
+
+			attackTimer--;
+
+			if (attackTimer <= 0)
+			{
+				isAttack = false;
+				attackCoolTime = 1000;
+			}
 		}
 	}
-
+	
+	if (attackCoolTime > 0)
+	{
+		attackCoolTime--;
+	}
 
 	//ˆÚ“®Œã‚ÌÀ•W‚ğ“–‚½‚è”»’è‚Ö
 	box.left = x + 18;
@@ -107,4 +115,18 @@ const Box& Player::GetAttackBox() const
 bool Player::IsAttack() const
 {
 	return isAttack;
+}
+
+int Player::GetHP() const
+{
+	return P_HP;
+}
+
+void Player::Damage(int value)
+{
+	P_HP -= value;
+	if (P_HP < 0)
+	{
+		P_HP = 0;
+	}
 }
