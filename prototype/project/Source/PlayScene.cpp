@@ -13,38 +13,44 @@ PlayScene::PlayScene()
 
 PlayScene::~PlayScene()
 {
-	player->Update();
-	enemy->Update();
+	//delete player;
+	//delete enemy;
 }
 
 void PlayScene::Update()
 {
-	player->Update();
-	enemy->Update();
+	if (!GameOverFlg)
+	{
+		player->Update();
 
-	//player‚Æenemy‚ª“–‚½‚Á‚½Žž‚Ìˆ—
-	if (CheckHit(player->GetBox(), enemy->GetBox()))
-	{
-		//“–‚½‚Á‚½Žž‚Ìˆ—
-		//DrawString(10, 10, "Hit!", GetColor(0, 0, 0));
-		player->Damage(1);
-	}
-	//player‚ªUŒ‚‚ðs‚¢enemy‚Öhit‚µ‚½Žž‚Ìˆ—
-	if (player->IsAttack())
-	{
-		if (CheckHit(player->GetAttackBox(), enemy->GetBox()))
+		enemy->SetPlayerPosition(player->GetPlayerPositionX(), player->GetPlayerPositionY());
+
+		enemy->Update();
+
+		//player‚Æenemy‚ª“–‚½‚Á‚½Žž‚Ìˆ—
+		if (CheckHit(player->GetBox(), enemy->GetBox()))
 		{
-			DrawString(10, 10, "Hit", GetColor(0, 255, 0));
+			//“–‚½‚Á‚½Žž‚Ìˆ—
+			//DrawString(10, 10, "Hit!", GetColor(0, 0, 0));
+			player->Damage(1);
+			GameOverFlg = true;
+			player->SetGameOver(GameOverFlg);
+			GameOverTimer = 600;
+		}
+		//player‚ªUŒ‚‚ðs‚¢enemy‚Öhit‚µ‚½Žž‚Ìˆ—
+		if (player->IsAttack())
+		{
+			if (CheckHit(player->GetAttackBox(), enemy->GetBox()))
+			{
+				DrawString(10, 10, "Hit", GetColor(0, 255, 0));
+			}
 		}
 	}
-
-
-	if ()
+	else
 	{
-		
-		int x = 1000;
-		x--;
-		if (x == 0)
+		GameOverTimer--;
+
+		if (GameOverTimer <= 0)
 		{
 			SceneManager::ChangeScene("TITLE");
 		}
@@ -63,6 +69,8 @@ void PlayScene::Draw()
 	DrawString(0, 0, "PLAY SCENE", GetColor(255, 255, 255));
 	//DrawString(100, 400, "Push [T]Key To Title", GetColor(255, 255, 255));
 	
-
-	DrawString(100, 400, "GAMEOVER", GetColor(0, 0, 0));
+	if (GameOverFlg)
+	{
+		DrawString(100, 400, "GAMEOVER", GetColor(0, 0, 0));
+	}
 }

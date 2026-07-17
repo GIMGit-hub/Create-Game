@@ -15,10 +15,12 @@ public:
 	void Update() override;
 	void Draw() override;
 
+	bool GameOverFlg = false;
 
 private:
 	int map;
 	Player* player;
 	Enemy* enemy;
 
+	int GameOverTimer = 0;
 };

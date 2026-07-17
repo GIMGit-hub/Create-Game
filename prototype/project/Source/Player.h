@@ -1,7 +1,9 @@
 #pragma once
 #include "../Library/GameObject.h"
 #include "Box.h"
+#include "PlayScene.h"
 
+class Enemy;
 
 class Player : public GameObject
 {
@@ -18,6 +20,12 @@ public:
 	int GetHP() const;
 	void Damage(int value);
 
+	float GetPlayerPositionX() const;
+	float GetPlayerPositionY() const;
+
+	void SetGameOver(bool gameover);
+	
+
 private:
 	int player;
 	float x, y;
@@ -25,8 +33,9 @@ private:
 	int P_HP = 1;
 	float P_move = 2.0f;
 
-	Box box;
+	Enemy* enemy;
 
+	Box box;
 	Box attackBox;
 
 	//攻撃しているかを判定
@@ -36,5 +45,7 @@ private:
 	//攻撃のクールタイム
 	int attackCoolTime = 0;
 
+
+	bool P_GameOverFlg = false;
 };
 

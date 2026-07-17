@@ -1,5 +1,7 @@
 #include"Player.h"
-
+#include "Screen.h"
+#include "Enemy.h"
+#include "PlayScene.h"
 
 Player::Player()
 {
@@ -18,28 +20,52 @@ Player::~Player()
 
 }
 
+void Player::SetGameOver(bool value)
+{
+	P_GameOverFlg = value;
+}
+
 void Player::Update()
 {
-
+	if (P_GameOverFlg)
+	{
+		return;
+	}
 	//à⁄ìÆèàóù
 	if (CheckHitKey(KEY_INPUT_W))
 	{
 		y -= P_move;
+		if (y < -30)
+		{
+			y = -30;
+		}
 	}
 
 	if (CheckHitKey(KEY_INPUT_S))
 	{
 		y += P_move;
+		if (y > Screen::HEIGHT-125)
+		{
+			y = Screen::HEIGHT-125;
+		}
 	}
 
 	if (CheckHitKey(KEY_INPUT_A))
 	{
 		x -= P_move;
+		if (x < -30)
+		{
+			x = -30;
+		}
 	}
 
 	if (CheckHitKey(KEY_INPUT_D))
 	{
 		x += P_move;
+		if (x > Screen::WIDTH-115)
+		{
+			x = Screen::WIDTH-115;
+		}
 	}
 
 
@@ -130,3 +156,14 @@ void Player::Damage(int value)
 		P_HP = 0;
 	}
 }
+
+float Player::GetPlayerPositionX() const
+{
+	return x;
+}
+
+float Player::GetPlayerPositionY() const
+{
+	return y;
+}
+
