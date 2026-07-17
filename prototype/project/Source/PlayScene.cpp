@@ -26,7 +26,8 @@ void PlayScene::Update()
 	if (CheckHit(player->GetBox(), enemy->GetBox()))
 	{
 		//“–‚½‚Á‚½Žž‚Ìˆ—
-		DrawString(10, 10, "Hit!", GetColor(0, 0, 0));
+		//DrawString(10, 10, "Hit!", GetColor(0, 0, 0));
+		player->Damage(1);
 	}
 	//player‚ªUŒ‚‚ðs‚¢enemy‚Öhit‚µ‚½Žž‚Ìˆ—
 	if (player->IsAttack())
@@ -37,6 +38,17 @@ void PlayScene::Update()
 		}
 	}
 
+
+	if ()
+	{
+		
+		int x = 1000;
+		x--;
+		if (x == 0)
+		{
+			SceneManager::ChangeScene("TITLE");
+		}
+	}
 
 	if (CheckHitKey(KEY_INPUT_ESCAPE)) {
 		SceneManager::ChangeScene("TITLE");
@@ -50,4 +62,7 @@ void PlayScene::Draw()
 	enemy->Draw();
 	DrawString(0, 0, "PLAY SCENE", GetColor(255, 255, 255));
 	//DrawString(100, 400, "Push [T]Key To Title", GetColor(255, 255, 255));
+	
+
+	DrawString(100, 400, "GAMEOVER", GetColor(0, 0, 0));
 }
