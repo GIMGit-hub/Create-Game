@@ -33,6 +33,8 @@ private:
 	int P_HP = 1;
 	float P_move = 2.0f;
 
+	std::string direction;
+
 	Enemy* enemy;
 
 	Box box;

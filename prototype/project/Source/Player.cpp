@@ -39,6 +39,7 @@ void Player::Update()
 		{
 			y = -30;
 		}
+		direction = "up";
 	}
 
 	if (CheckHitKey(KEY_INPUT_S))
@@ -48,6 +49,7 @@ void Player::Update()
 		{
 			y = Screen::HEIGHT-125;
 		}
+		direction = "down";
 	}
 
 	if (CheckHitKey(KEY_INPUT_A))
@@ -57,6 +59,7 @@ void Player::Update()
 		{
 			x = -30;
 		}
+		direction = "left";
 	}
 
 	if (CheckHitKey(KEY_INPUT_D))
@@ -66,6 +69,7 @@ void Player::Update()
 		{
 			x = Screen::WIDTH-115;
 		}
+		direction = "right";
 	}
 
 
@@ -73,12 +77,12 @@ void Player::Update()
 	if (CheckHitKey(KEY_INPUT_SPACE) && !isAttack && attackCoolTime == 0)
 	{
 		isAttack = true;
-		attackTimer = 100;
+		attackTimer = 50;
 	}
 
 	if (attackCoolTime == 0)
 	{
-		if (isAttack)
+		if (isAttack && direction == "right")
 		{
 			attackBox.left = x + 96;
 			attackBox.top = y + 32;
@@ -90,9 +94,55 @@ void Player::Update()
 			if (attackTimer <= 0)
 			{
 				isAttack = false;
-				attackCoolTime = 1000;
+				attackCoolTime = 100;
 			}
 		}
+		else if(isAttack && direction == "left")
+		{
+			attackBox.left = x + 20;
+			attackBox.top = y + 32;
+			attackBox.right = x - 46;
+			attackBox.bottom = y + 96;
+
+			attackTimer--;
+
+			if (attackTimer <= 0)
+			{
+				isAttack = false;
+				attackCoolTime = 100;
+			}
+		}
+		else if (isAttack && direction == "up")
+		{
+			attackBox.left = x + 32;
+			attackBox.top = y - 2;
+			attackBox.right = x + 96;
+			attackBox.bottom = y - 46;
+
+			attackTimer--;
+
+			if (attackTimer <= 0)
+			{
+				isAttack = false;
+				attackCoolTime = 100;
+			}
+		}
+		else if(isAttack && direction == "down")
+		{
+			attackBox.left = x + 32;
+			attackBox.top = y + 96;
+			attackBox.right = x + 96;
+			attackBox.bottom = y + 160;
+
+			attackTimer--;
+
+			if (attackTimer <= 0)
+			{
+				isAttack = false;
+				attackCoolTime = 100;
+			}
+		}
+		
 	}
 	
 	if (attackCoolTime > 0)
