@@ -10,6 +10,8 @@ Player::Player()
 	x = 100;
 	y = 100;
 
+	GetGraphSize(swordGraph, &swordImagW, &swordImagH);
+
 	box.left = x + 18;
 	box.top = y + 32;
 	box.right = x + 108;
@@ -82,71 +84,48 @@ void Player::Update()
 		hitEnemy = false;
 	}
 
-	if (attackCoolTime == 0)
-	{
-		if (isAttack && direction == "right")
-		{
-			attackBox.left = x + 96;
-			attackBox.top = y + 32;
-			attackBox.right = x + 160;
-			attackBox.bottom = y + 96;
-
-			attackTimer--;
-
-			if (attackTimer <= 0)
-			{
-				isAttack = false;
-				attackCoolTime = 100;
-			}
-		}
-		else if(isAttack && direction == "left")
-		{
-			attackBox.left = x - 84;
-			attackBox.top = y + 32;
-			attackBox.right = x - 20;
-			attackBox.bottom = y + 96;
-
-			attackTimer--;
-
-			if (attackTimer <= 0)
-			{
-				isAttack = false;
-				attackCoolTime = 100;
-			}
-		}
-		else if (isAttack && direction == "up")
-		{
-			attackBox.left = x + 32;
-			attackBox.top = y - 2;
-			attackBox.right = x + 96;
-			attackBox.bottom = y - 46;
-
-			attackTimer--;
-
-			if (attackTimer <= 0)
-			{
-				isAttack = false;
-				attackCoolTime = 100;
-			}
-		}
-		else if(isAttack && direction == "down")
-		{
-			attackBox.left = x + 32;
-			attackBox.top = y + 96;
-			attackBox.right = x + 96;
-			attackBox.bottom = y + 160;
-
-			attackTimer--;
-
-			if (attackTimer <= 0)
-			{
-				isAttack = false;
-				attackCoolTime = 100;
-			}
-		}
-		
-	}
 	
+	
+	if (attackCoolTime == 0 && isAttack)
+	{
+		//攻撃の進行度
+		float progress = 1.0f - (float)attackTimer / 50.0f;
+
+		//振り角度
+		float swingRange = 120.0f * (3.14159265f / 180.0f);
+		float startAngle = -swingRange / 2.0f;
+		float currentAngle = startAngle + swingRange * progress;
+
+		//方向ごとの基準角度
+		float baseAngle = 0.0f;
+		float centerX = x + 63;
+		float centerY = y + 63;
+
+		if (direction == "right")      baseAngle = 0.0f;
+		else if (direction == "left")  baseAngle = 3.14159265f;
+		else if (direction == "up")    baseAngle = -3.14159265f / 2.0f;
+		else if (direction == "down")  baseAngle = 3.14159265f / 2.0f;
+
+		float finalAngle = baseAngle + currentAngle;
+
+		//剣先座標を算出(Draw()でも同じ値を使う)
+		swordCenterX = centerX + cosf(finalAngle) * swordDist;
+		swordCenterY = centerY + sinf(finalAngle) * swordDist;
+		swordAngle = finalAngle;
+
+		//剣先を中心にattackBoxを作る
+		attackBox.left = swordCenterX - attackBoxSize / 2;
+		attackBox.top = swordCenterY - attackBoxSize / 2;
+		attackBox.right = swordCenterX + attackBoxSize / 2;
+		attackBox.bottom = swordCenterY + attackBoxSize / 2;
+		
+		attackTimer--;
+		if (attackTimer <= 0)
+		{
+			isAttack = false;
+			attackCoolTime = 100;
+		}
+	}
 	if (attackCoolTime > 0)
 	{
 		attackCoolTime--;
@@ -177,50 +156,10 @@ void Player::Draw()
 			GetColor(255, 255, 0),
 			FALSE);
 
-		//攻撃の進行度
-		float progress = 1.0f - (float)attackTimer / 50.0f;
+		int imgLongSide = (swordImagW > swordImagH) ? swordImagW : swordImagH;
+		double extRate = (double)attackBoxSize/ (double)imgLongSide;
 
-		//振り角度
-		float swingRange = 120.0f * (3.14159265f / 180.0f);
-		float startAngle = -swingRange / 2.0f;
-		float currentAngle = startAngle + swingRange * progress;
-
-		//剣の初期向き + プレイヤー中心からの描画距離
-		float baseAngle = 0.0f;
-		float centerX = 0, centerY = 0;
-		int swordDist = 60; //プレイヤー中心から剣までの距離
-
-		if (direction == "right")
-		{
-			baseAngle = 0.0f;
-			centerX = x + 63;
-			centerY = y + 63;
-		}
-		else if (direction == "left")
-		{
-			baseAngle = 3.14159265f; // 180度
-			centerX = x + 63;
-			centerY = y + 63;
-		}
-		else if (direction == "up")
-		{
-			baseAngle = -3.14159265f / 2.0f; // -90度
-			centerX = x + 63;
-			centerY = y + 63;
-		}
-		else if (direction == "down")
-		{
-			baseAngle = 3.14159265f / 2.0f; // 90度
-			centerX = x + 63;
-			centerY = y + 63;
-		}
-
-		float finalAngle = baseAngle + currentAngle;
-
-		int swordX = centerX + (int)(cosf(finalAngle) * swordDist);
-		int swordY = centerY + (int)(sinf(finalAngle) * swordDist);
-
-		DrawRotaGraph(swordX, swordY, 1.0, finalAngle + 3.14159265f / 4.0f, swordGraph, TRUE);
+		DrawRotaGraph((int)swordCenterX,(int)swordCenterY, extRate, swordAngle + 3.14159265f / 4.0f, swordGraph, TRUE);
 
 	}
 	//DrawRectGraph(x, y, 64, 0, 64, 64, player, 1);

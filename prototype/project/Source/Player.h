@@ -54,5 +54,11 @@ private:
 	bool P_GameOverFlg = false;
 
 	int swordGraph;
+	int swordImagW, swordImagH;
+
+	float swordCenterX = 0, swordCenterY = 0; //剣先座標
+	float swordAngle = 0;//剣の回転角度
+	int swordDist = 70;//プレイヤー中心から剣先までの距離
+	int attackBoxSize = 60;//剣先を中心とした判定枠の一辺
 };
 
