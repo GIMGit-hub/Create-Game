@@ -25,6 +25,8 @@ public:
 
 	void SetGameOver(bool gameover);
 	
+	bool HitEnemy() const;
+	void SetHitEnemy(bool value);
 
 private:
 	int player;
@@ -40,6 +42,8 @@ private:
 	Box box;
 	Box attackBox;
 
+	bool hitEnemy = false;
+
 	//UŒ‚‚µ‚Ä‚¢‚é‚©‚ğ”»’è
 	bool isAttack = false;
 	//UŒ‚‚Ì‘±ŠÔ
@@ -47,7 +51,8 @@ private:
 	//UŒ‚‚ÌƒN[ƒ‹ƒ^ƒCƒ€
 	int attackCoolTime = 0;
 
-
 	bool P_GameOverFlg = false;
+
+	int swordGraph;
 };
 

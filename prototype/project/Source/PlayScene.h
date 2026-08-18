@@ -23,4 +23,7 @@ private:
 	Enemy* enemy;
 
 	int GameOverTimer = 0;
+
+	bool GameClearFlg = false;
+	int GameClearTimer = 0;
 };

@@ -6,6 +6,7 @@
 Player::Player()
 {
 	player = LoadGraph("data/Player/character_green_hit.png");
+	swordGraph = LoadGraph("data/weapon/weapon.png");
 	x = 100;
 	y = 100;
 
@@ -78,6 +79,7 @@ void Player::Update()
 	{
 		isAttack = true;
 		attackTimer = 50;
+		hitEnemy = false;
 	}
 
 	if (attackCoolTime == 0)
@@ -99,9 +101,9 @@ void Player::Update()
 		}
 		else if(isAttack && direction == "left")
 		{
-			attackBox.left = x + 20;
+			attackBox.left = x - 84;
 			attackBox.top = y + 32;
-			attackBox.right = x - 46;
+			attackBox.right = x - 20;
 			attackBox.bottom = y + 96;
 
 			attackTimer--;
@@ -174,6 +176,52 @@ void Player::Draw()
 			attackBox.bottom,
 			GetColor(255, 255, 0),
 			FALSE);
+
+		//攻撃の進行度
+		float progress = 1.0f - (float)attackTimer / 50.0f;
+
+		//振り角度
+		float swingRange = 120.0f * (3.14159265f / 180.0f);
+		float startAngle = -swingRange / 2.0f;
+		float currentAngle = startAngle + swingRange * progress;
+
+		//剣の初期向き + プレイヤー中心からの描画距離
+		float baseAngle = 0.0f;
+		float centerX = 0, centerY = 0;
+		int swordDist = 60; //プレイヤー中心から剣までの距離
+
+		if (direction == "right")
+		{
+			baseAngle = 0.0f;
+			centerX = x + 63;
+			centerY = y + 63;
+		}
+		else if (direction == "left")
+		{
+			baseAngle = 3.14159265f; // 180度
+			centerX = x + 63;
+			centerY = y + 63;
+		}
+		else if (direction == "up")
+		{
+			baseAngle = -3.14159265f / 2.0f; // -90度
+			centerX = x + 63;
+			centerY = y + 63;
+		}
+		else if (direction == "down")
+		{
+			baseAngle = 3.14159265f / 2.0f; // 90度
+			centerX = x + 63;
+			centerY = y + 63;
+		}
+
+		float finalAngle = baseAngle + currentAngle;
+
+		int swordX = centerX + (int)(cosf(finalAngle) * swordDist);
+		int swordY = centerY + (int)(sinf(finalAngle) * swordDist);
+
+		DrawRotaGraph(swordX, swordY, 1.0, finalAngle + 3.14159265f / 4.0f, swordGraph, TRUE);
+
 	}
 	//DrawRectGraph(x, y, 64, 0, 64, 64, player, 1);
 }
@@ -217,3 +265,12 @@ float Player::GetPlayerPositionY() const
 	return y;
 }
 
+bool Player::HitEnemy() const
+{
+	return hitEnemy;
+}
+
+void Player::SetHitEnemy(bool value)
+{
+	hitEnemy = value;
+}

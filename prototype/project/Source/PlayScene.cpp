@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Collision.h"
+#include "Bullet.h"
 
 PlayScene::PlayScene()
 {
@@ -9,6 +10,7 @@ PlayScene::PlayScene()
 
 	player = new Player();
 	enemy = new Enemy();
+	
 }
 
 PlayScene::~PlayScene()
@@ -19,7 +21,7 @@ PlayScene::~PlayScene()
 
 void PlayScene::Update()
 {
-	if (!GameOverFlg)
+	if (!GameOverFlg && !GameClearFlg)
 	{
 		player->Update();
 
@@ -37,16 +39,50 @@ void PlayScene::Update()
 			player->SetGameOver(GameOverFlg);
 			GameOverTimer = 600;
 		}
+		//enemy‚Ì’e‚ªplayer‚É“–‚½‚Á‚½‚Æ‚«‚Ìˆ—
+		for (const auto& bullet : enemy->GetBullets())
+		{
+			if (CheckHit(player->GetBox(), bullet.GetBox()))
+			{
+				player->Damage(1);
+				GameOverFlg = true;
+				player->SetGameOver(GameOverFlg);
+				GameOverTimer = 200;
+				break;
+			}
+		}
 		//player‚ªUŒ‚‚ðs‚¢enemy‚Öhit‚µ‚½Žž‚Ìˆ—
-		if (player->IsAttack())
+		if (player->IsAttack() && !player->HitEnemy())
 		{
 			if (CheckHit(player->GetAttackBox(), enemy->GetBox()))
 			{
+				enemy->TakeDamage(1);
+				player->SetHitEnemy(true);
+
+				if (enemy->IsEnemyDead())
+				{
+					GameClearFlg = true;
+					player->SetGameOver(true);
+					GameClearTimer = 200;
+				}
+
 				DrawString(10, 10, "Hit", GetColor(0, 255, 0));
 			}
 		}
+		
+		
+
 	}
-	else
+	else if(GameOverFlg)
+	{
+		GameOverTimer--;
+
+		if (GameOverTimer <= 0)
+		{
+			SceneManager::ChangeScene("TITLE");
+		}
+	}
+	else if(GameClearFlg)
 	{
 		GameOverTimer--;
 

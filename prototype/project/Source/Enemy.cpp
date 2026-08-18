@@ -1,10 +1,12 @@
 #include"Enemy.h"
 #include"Screen.h"
 #include"Player.h"
+#include<algorithm>
 
 Enemy::Enemy()
 {
 	enemy = LoadGraph("data/Enemy/slime_block_walk_a.png");
+	bulletGraphHandle = LoadGraph("data/Enemy/Bullet.png");
 	x = 800;
 	y = 500;
 
@@ -53,7 +55,17 @@ void Enemy::Update()
 		break;
 	}
 
-	
+	//‘S’e‚ð1ƒtƒŒ[ƒ€“®‚©‚µ‚Ä‚¢‚é
+	for (auto& b : bullets)
+	{
+		b.Update();
+	}
+
+	//Ž€‚ñ‚¾’e‚ðvecter‚ÌŒã‚ë‚É‚¸‚ç‚µŒã‚ë‚Ì•ª‚ðØ‚èŽÌ‚Ä‚é
+	bullets.erase(
+		std::remove_if(bullets.begin(),bullets.end(),
+			[](const Bullet& b) {return b.IsDead(); }),
+		bullets.end());
 
 
 	//ˆÚ“®§ŒÀ
@@ -83,7 +95,45 @@ void Enemy::Update()
 
 void Enemy::ShootUpdate()
 {
+	patternTimer++;
+	if (patternTimer >= PATTERN_CHANGE_INTERVAL)
+	{
+		patternTimer = 0;
+		currrentPattern = static_cast<ShootPattern>(rand() % 3);
+	}
 
+	shootTimer++;
+	if (shootTimer < SHOOT_INTERVAL) return;
+	shootTimer = 0;
+
+	float dx = E_playerPositionX - x;
+	float dy = E_playerPositionY - y;
+	float aimAngle = atan2f(dy, dx);
+
+	switch (currrentPattern)
+	{
+	case Aimed:
+	{
+		bullets.push_back(Bullet(x + 32, y + 32, aimAngle, 5.0f,bulletGraphHandle));
+		break;
+	}
+	case Circular:
+	{
+		const int bulletCount = 16;
+		for (int i = 0; i < bulletCount; i++)
+		{
+			float angle = (2.0f * 3.14159265f * i) / bulletCount;
+			bullets.push_back(Bullet(x + 32, y + 32, angle, 3.5f,bulletGraphHandle));
+		}
+		break;
+	}	
+	case Spiral:
+	{
+		bullets.push_back(Bullet(x + 32, y + 32, spiralAngle, 4.0f,bulletGraphHandle));
+		spiralAngle += 0.3f;
+		break;
+	}
+	}
 }
 
 void Enemy::MeleeUpdate()
@@ -107,6 +157,11 @@ void Enemy::Draw()
 
 	//“–‚½‚è”»’è‚Ì‰ÂŽ‹‰»
 	DrawBox((int)box.left, (int)box.top, (int)box.right, (int)box.bottom, GetColor(255, 0, 0), FALSE);
+
+	for (auto& b : bullets)
+	{
+		b.Draw();
+	}
 }
 
 const Box& Enemy::GetBox() const
@@ -123,4 +178,24 @@ void Enemy::SetPlayerPosition(float px, float py)
 {
 	E_playerPositionX = px;
 	E_playerPositionY = py;
+}
+
+const std::vector<Bullet>& Enemy::GetBullets() const
+{
+	return bullets;
+}
+
+void Enemy::TakeDamage(int damage)
+{
+	E_HP -= damage;
+	if (E_HP <= 0)
+	{
+		E_HP = 0;
+		isEnemyDead = true;
+	}
+}
+
+bool Enemy::IsEnemyDead() const
+{
+	return isEnemyDead;
 }
