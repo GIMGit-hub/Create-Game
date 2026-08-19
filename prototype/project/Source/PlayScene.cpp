@@ -6,7 +6,7 @@
 
 PlayScene::PlayScene()
 {
-	map = LoadGraph("data/map/ground-dot1.jpg");
+	map = LoadGraph("data/map/map3.jpg");
 
 	player = new Player();
 	enemy = new Enemy();
@@ -105,6 +105,8 @@ void PlayScene::Draw()
 	DrawString(0, 0, "PLAY SCENE", GetColor(255, 255, 255));
 	//DrawString(100, 400, "Push [T]Key To Title", GetColor(255, 255, 255));
 	
+	DrawFormatString(10, 30, GetColor(255, 255, 255), "X:%.1f Y:%.1f", player->GetPlayerPositionX(), player->GetPlayerPositionY());
+
 	if (GameOverFlg)
 	{
 		DrawString(100, 400, "GAMEOVER", GetColor(0, 0, 0));

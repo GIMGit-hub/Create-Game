@@ -5,17 +5,17 @@
 
 Player::Player()
 {
-	player = LoadGraph("data/Player/character_green_hit.png");
+	player = LoadGraph("data/Player/Night.png");
 	swordGraph = LoadGraph("data/weapon/weapon.png");
 	x = 100;
 	y = 100;
 
 	GetGraphSize(swordGraph, &swordImagW, &swordImagH);
 
-	box.left = x + 18;
-	box.top = y + 32;
-	box.right = x + 108;
-	box.bottom = y + 128;
+	box.left = x + 12;
+	box.top = y + 8;
+	box.right = x + 52;
+	box.bottom = y + 60;
 }
 
 Player::~Player()
@@ -75,6 +75,23 @@ void Player::Update()
 		direction = "right";
 	}
 
+	bool isMoving = CheckHitKey(KEY_INPUT_W) || CheckHitKey(KEY_INPUT_S)
+		|| CheckHitKey(KEY_INPUT_A) || CheckHitKey(KEY_INPUT_D);
+	
+	if (isMoving)
+	{
+		animTimer++;
+		if (animTimer >= 8)
+		{
+			animTimer = 0;
+			playerAnimIndex = (playerAnimIndex + 1) % 4;
+		}
+	}
+	else
+	{
+		playerAnimIndex = 0;
+		animTimer = 0;
+	}
 
 	//UŒ‚‚·‚é‚Æ‚«‚Ìˆ—
 	if (CheckHitKey(KEY_INPUT_SPACE) && !isAttack && attackCoolTime == 0)
@@ -132,15 +149,37 @@ void Player::Update()
 	}
 
 	//ˆÚ“®Œã‚ÌÀ•W‚ğ“–‚½‚è”»’è‚Ö
-	box.left = x + 18;
-	box.top = y + 32;
-	box.right = x + 108;
-	box.bottom = y + 128;
+	box.left = x + 12;
+	box.top = y + 8;
+	box.right = x + 52;
+	box.bottom = y + 60;
 }
 
 void Player::Draw()
 {
-	DrawGraph(x, y, player, TRUE);
+	
+	int row = 0;
+	if (direction == "down")
+	{
+		row = 0;
+	}
+	else if (direction == "left")
+	{
+		row = 1;
+	}
+	else if (direction == "right")
+	{
+		row = 2;
+	}
+	else if(direction == "up")
+	{
+		row = 3;
+	}
+
+	int srcX = playerAnimIndex * CELL_W;
+	int srcY = row * CELL_H;
+
+	DrawRectGraph(x, y, srcX, srcY, CELL_W, CELL_H, player,TRUE);
 
 	//“–‚½‚è”»’è‚Ì‰Â‹‰»
 	DrawBox((int)box.left,(int)box.top,(int)box.right,(int)box.bottom,GetColor(255, 0, 0),FALSE);
