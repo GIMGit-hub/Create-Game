@@ -5,17 +5,17 @@
 
 Player::Player()
 {
-	player = LoadGraph("data/Player/Night.png");
+	player = LoadGraph("data/Player/Player.png");
 	swordGraph = LoadGraph("data/weapon/weapon.png");
 	x = 100;
 	y = 100;
 
 	GetGraphSize(swordGraph, &swordImagW, &swordImagH);
 
-	box.left = x + 12;
-	box.top = y + 8;
-	box.right = x + 52;
-	box.bottom = y + 60;
+	box.left = x + 6;
+	box.top = y + 4;
+	box.right = x + 26;
+	box.bottom = y + 30;
 }
 
 Player::~Player()
@@ -115,13 +115,25 @@ void Player::Update()
 
 		//ï˚å¸Ç≤Ç∆ÇÃäÓèÄäpìx
 		float baseAngle = 0.0f;
-		float centerX = x + 63;
-		float centerY = y + 63;
+		float centerX = x + CELL_W / 2.0f;
+		float centerY = y + CELL_H / 2.0f;
 
-		if (direction == "right")      baseAngle = 0.0f;
-		else if (direction == "left")  baseAngle = 3.14159265f;
-		else if (direction == "up")    baseAngle = -3.14159265f / 2.0f;
-		else if (direction == "down")  baseAngle = 3.14159265f / 2.0f;
+		if (direction == "right")
+		{
+			baseAngle = 0.0f;
+		}
+		else if (direction == "left")
+		{
+			baseAngle = 3.14159265f;
+		}
+		else if (direction == "up")
+		{
+			baseAngle = -3.14159265f / 2.0f;
+		}
+		else if (direction == "down")
+		{
+			baseAngle = 3.14159265f / 2.0f;
+		}
 
 		float finalAngle = baseAngle + currentAngle;
 
@@ -149,37 +161,50 @@ void Player::Update()
 	}
 
 	//à⁄ìÆå„ÇÃç¿ïWÇìñÇΩÇËîªíËÇ÷
-	box.left = x + 12;
-	box.top = y + 8;
-	box.right = x + 52;
-	box.bottom = y + 60;
+	box.left = x + 6;
+	box.top = y + 4;
+	box.right = x + 26;
+	box.bottom = y + 30;
 }
 
 void Player::Draw()
 {
 	
 	int row = 0;
+	bool flip = false;
 	if (direction == "down")
 	{
 		row = 0;
 	}
 	else if (direction == "left")
 	{
-		row = 1;
+		row = 6;
 	}
 	else if (direction == "right")
 	{
 		row = 2;
+		//flip = true;
 	}
 	else if(direction == "up")
 	{
-		row = 3;
+		row = 4;
 	}
 
 	int srcX = playerAnimIndex * CELL_W;
 	int srcY = row * CELL_H;
 
-	DrawRectGraph(x, y, srcX, srcY, CELL_W, CELL_H, player,TRUE);
+	/*if (flip)
+	{
+		int centerX = x + CELL_W / 2;
+		int centerY = y + CELL_H / 2;
+		DrawRectRotaGraph(centerX, centerY, srcX, srcY, CELL_W, CELL_H, 1.0, 1.0, player, TRUE, TRUE);
+	}*/
+	/*else
+	{
+		DrawRectGraph(x, y, srcX, srcY, CELL_W, CELL_H, player, TRUE);
+	}*/
+
+	DrawRectGraph(x, y, srcX, srcY, CELL_W, CELL_H, player, TRUE);
 
 	//ìñÇΩÇËîªíËÇÃâ¬éãâª
 	DrawBox((int)box.left,(int)box.top,(int)box.right,(int)box.bottom,GetColor(255, 0, 0),FALSE);

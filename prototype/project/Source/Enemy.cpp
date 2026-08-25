@@ -5,7 +5,7 @@
 
 Enemy::Enemy()
 {
-	enemy = LoadGraph("data/Enemy/slime_block_walk_a.png");
+	enemy = LoadGraph("data/Enemy/Enemy.png");
 	bulletGraphHandle = LoadGraph("data/Enemy/Bullet.png");
 	x = 800;
 	y = 500;
@@ -27,7 +27,7 @@ void Enemy::Update()
 	float dy = E_playerPositionY - y;
 	float distance = sqrtf(dx * dx + dy * dy);
 
-	if (distance > 300)
+	if (distance > 1)
 	{
 		state = Shoot;
 	}
@@ -143,12 +143,12 @@ void Enemy::MeleeUpdate()
 
 void Enemy::TeleportUpdate()
 {
-	//テレポート時の処理
-	int offsetX = rand() % 201 - 100;
-	int offsetY = rand() % 201 - 100;
+	float angle = (rand() % 360) * (3.14159265f / 180.0f);
 
-	x = E_playerPositionX + offsetX;
-	y = E_playerPositionY + offsetY;
+	float dist = TELEPORT_MIN_DIST * (float)(rand() % (int)(TELEPORT_MAX_DIST - TELEPORT_MIN_DIST));
+
+	x = E_playerPositionX + cosf(angle) * dist;
+	y = E_playerPositionY + sinf(angle) * dist;
 }
 
 void Enemy::Draw()

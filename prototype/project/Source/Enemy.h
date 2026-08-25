@@ -43,7 +43,7 @@ private:
 	int enemy;
 	float x, y;
 
-	int E_HP = 1;
+	int E_HP = 10;
 
 	bool isEnemyDead = false;
 
@@ -73,5 +73,8 @@ private:
 	Player* player;
 
 	Box box;
+
+	const float TELEPORT_MIN_DIST = 150.0f;
+	const float TELEPORT_MAX_DIST = 250.0f;
 };
 

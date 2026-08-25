@@ -58,12 +58,14 @@ private:
 
 	float swordCenterX = 0, swordCenterY = 0; //剣先座標
 	float swordAngle = 0;//剣の回転角度
-	int swordDist = 70;//プレイヤー中心から剣先までの距離
-	int attackBoxSize = 60;//剣先を中心とした判定枠の一辺
+	int swordDist = 22;//プレイヤー中心から剣先までの距離
+	int attackBoxSize = 26;//剣先を中心とした判定枠の一辺
 
 	int playerAnimIndex = 0;
 	int animTimer = 0;
-	const int CELL_W = 64;
-	const int CELL_H = 64;
+	const int CELL_W = 32;
+	const int CELL_H = 32;
+
+	
 };
 
