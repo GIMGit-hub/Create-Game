@@ -138,7 +138,7 @@ void Enemy::ShootUpdate()
 
 void Enemy::MeleeUpdate()
 {
-
+	//é¿ëïó\íËÇæÇ¡ÇΩãﬂãóó£çUåÇ
 }
 
 void Enemy::TeleportUpdate()
@@ -147,8 +147,11 @@ void Enemy::TeleportUpdate()
 
 	float dist = TELEPORT_MIN_DIST * (float)(rand() % (int)(TELEPORT_MAX_DIST - TELEPORT_MIN_DIST));
 
-	x = E_playerPositionX + cosf(angle) * dist;
-	y = E_playerPositionY + sinf(angle) * dist;
+	/*x = E_playerPositionX + cosf(angle) * dist;
+	y = E_playerPositionY + sinf(angle) * dist;*/
+
+	x = E_playerPositionX + E_playerPositionX;
+	y = E_playerPositionY + E_playerPositionY;
 }
 
 void Enemy::Draw()

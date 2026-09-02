@@ -65,8 +65,8 @@ private:
 	ShootPattern currrentPattern = Aimed;
 	float spiralAngle = 0.0f;
 	int patternTimer = 0;
-	const int SHOOT_INTERVAL = 20;
-	const int PATTERN_CHANGE_INTERVAL = 300;//パターン切り替え
+	const int SHOOT_INTERVAL = 40;//弾の打つ間隔
+	const int PATTERN_CHANGE_INTERVAL = 500;//パターン切り替え
 
 	EnemyState state;
 
