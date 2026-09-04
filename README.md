@@ -1,5 +1,5 @@
 # BOSSATTACK
-Bossを倒すだけのゲームです
+##Bossを倒すだけのゲームです
 【操作方法】
 移動キー　WASD
 攻撃　SPACE
