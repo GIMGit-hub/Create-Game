@@ -3,10 +3,6 @@
 #include"Player.h"
 #include"Enemy.h"
 
-
-/// <summary>
-/// ゲームプレイのシーンを制御する
-/// </summary>
 class PlayScene : public SceneBase
 {
 public:
@@ -22,8 +18,9 @@ private:
 	Player* player;
 	Enemy* enemy;
 
-	int GameOverTimer = 0;
+	double GameOverTimer = 0;
 
 	bool GameClearFlg = false;
-	int GameClearTimer = 0;
+	double GameClearTimer = 0;
+	int m_lastTime = 0;
 };

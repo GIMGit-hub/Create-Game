@@ -10,7 +10,8 @@ PlayScene::PlayScene()
 
 	player = new Player();
 	enemy = new Enemy();
-	
+
+	m_lastTime = GetNowCount();
 }
 
 PlayScene::~PlayScene()
@@ -21,6 +22,10 @@ PlayScene::~PlayScene()
 
 void PlayScene::Update()
 {
+	const int nowTime = GetNowCount();
+	const double deltaTime = (nowTime - m_lastTime) / 1000.0;
+	m_lastTime = nowTime;
+
 	if (!GameOverFlg && !GameClearFlg)
 	{
 		player->Update();
@@ -37,7 +42,7 @@ void PlayScene::Update()
 			player->Damage(1);
 			GameOverFlg = true;
 			player->SetGameOver(GameOverFlg);
-			GameOverTimer = 600;
+			GameOverTimer = 3.0;
 		}
 		//enemy‚Ì’e‚ªplayer‚É“–‚½‚Á‚½‚Æ‚«‚Ìˆ—
 		for (const auto& bullet : enemy->GetBullets())
@@ -63,7 +68,7 @@ void PlayScene::Update()
 				{
 					GameClearFlg = true;
 					player->SetGameOver(true);
-					GameClearTimer = 200;
+					GameClearTimer = 3.0;
 				}
 
 				DrawString(10, 10, "Hit", GetColor(0, 255, 0));
@@ -75,7 +80,7 @@ void PlayScene::Update()
 	}
 	else if(GameOverFlg)
 	{
-		GameOverTimer--;
+		GameOverTimer -= deltaTime;;
 
 		if (GameOverTimer <= 0)
 		{
@@ -84,9 +89,9 @@ void PlayScene::Update()
 	}
 	else if(GameClearFlg)
 	{
-		GameOverTimer--;
+		GameClearTimer -= deltaTime;
 
-		if (GameOverTimer <= 0)
+		if (GameClearTimer <= 0)
 		{
 			SceneManager::ChangeScene("TITLE");
 		}
@@ -109,6 +114,10 @@ void PlayScene::Draw()
 
 	if (GameOverFlg)
 	{
-		DrawString(100, 400, "GAMEOVER", GetColor(0, 0, 0));
+		DrawString(100, 400, "GAMEOVER", GetColor(255, 255, 255));
+	}
+	if (GameClearFlg)
+	{
+		DrawString(100, 400, "GAMECLEAR", GetColor(255, 255, 255));
 	}
 }
