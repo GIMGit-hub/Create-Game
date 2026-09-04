@@ -43,7 +43,7 @@ private:
 	int enemy;
 	float x, y;
 
-	int E_HP = 1;
+	int E_HP = 10;
 
 	bool isEnemyDead = false;
 
